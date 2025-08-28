@@ -1,13 +1,11 @@
 package br.com.aroldofe.apointments.exception.definition
 
-class EntityAlreadyExistsException(
-    entityName: String, pubId: String,
-    override val message: String = "$entityName with id $pubId already exists"
+class UsernameOrEmailAlreadyExists(
+    override val message: String = "Username or email already exists",
 ): ApiException(message) {
-
     override val errorResponseList = ErrorResponse(
         ErrorMessage(
-            error = "entity_already_exists",
+            error = "invalid_data",
             description = message,
         )
     )

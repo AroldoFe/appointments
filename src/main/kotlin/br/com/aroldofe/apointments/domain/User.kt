@@ -1,5 +1,7 @@
 package br.com.aroldofe.apointments.domain
 
+import br.com.aroldofe.apointments.utils.EntityType
+import br.com.aroldofe.apointments.utils.PublicIdUtils
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -18,8 +20,7 @@ class User(
     val id: Long? = null,
 
     @Column(name = "pub_id", nullable = false, length = 50, unique = true)
-    // TODO criar UUID7 automaticamente
-    val pubId: String,
+    val pubId: String = PublicIdUtils.generate(EntityType.USER),
 
     @Column(name = "name", nullable = false, length = 256)
     val name: String,

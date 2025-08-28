@@ -1,5 +1,7 @@
 package br.com.aroldofe.apointments.domain
 
+import br.com.aroldofe.apointments.utils.EntityType
+import br.com.aroldofe.apointments.utils.PublicIdUtils
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -11,17 +13,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import java.time.LocalDateTime
-import java.util.UUID
 
-object Code {
-    const val PREFIX_ID = "PROC"
-
-    fun generate(): String {
-        return "${PREFIX_ID}_${UUID.randomUUID().toString().uppercase()}"
-    }
-}
-
-// TODO adicionar listener para preencher creationUser automaticamente
 @Entity
 @Table(name = "procedure")
 class Procedure(
@@ -31,7 +23,7 @@ class Procedure(
     val id: Long? = null,
 
     @Column(name = "pub_id", nullable = false, length = 50, unique = true)
-    val pubId: String = Code.generate(),
+    val pubId: String = PublicIdUtils.generate(EntityType.PROCEDURE),
 
     @Column(name = "name", nullable = false, length = 256)
     var name: String,
