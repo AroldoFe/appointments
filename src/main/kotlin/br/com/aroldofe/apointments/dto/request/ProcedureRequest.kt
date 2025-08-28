@@ -1,5 +1,10 @@
 package br.com.aroldofe.apointments.dto.request
 
-data class ProcedureRequest (
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
+
+data class ProcedureRequest(
+    @field:NotBlank
+    @field:Size(max = 256)
     val name: String
 )
