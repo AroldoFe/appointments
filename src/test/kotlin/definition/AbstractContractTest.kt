@@ -1,6 +1,6 @@
 package definition
 
-import br.com.aroldofe.apointments.exception.DefaultExceptionHandler
+import br.com.aroldofe.appointments.exception.DefaultExceptionHandler
 import java.time.Duration
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode

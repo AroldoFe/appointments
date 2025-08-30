@@ -1,7 +1,7 @@
 package utils.assertions
 
-import br.com.aroldofe.apointments.exception.definition.ErrorMessage
-import br.com.aroldofe.apointments.exception.definition.ErrorResponse
+import br.com.aroldofe.appointments.exception.definition.ErrorMessage
+import br.com.aroldofe.appointments.exception.definition.ErrorResponse
 import kotlin.test.assertNotNull
 import org.assertj.core.api.Assertions.assertThat
 

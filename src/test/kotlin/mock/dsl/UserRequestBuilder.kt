@@ -1,6 +1,6 @@
 package mock.dsl
 
-import br.com.aroldofe.apointments.dto.request.UserRequest
+import br.com.aroldofe.appointments.dto.request.UserRequest
 
 @DslMarker
 annotation class ApiTestDsl
@@ -34,7 +34,7 @@ class UserRequestBuilder {
         this.password = password
     }
 
-    fun build() = br.com.aroldofe.apointments.dto.request.UserRequest(
+    fun build() = br.com.aroldofe.appointments.dto.request.UserRequest(
         name = name,
         email = email,
         username = username,
