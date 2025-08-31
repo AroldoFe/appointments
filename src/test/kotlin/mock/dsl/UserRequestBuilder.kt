@@ -16,7 +16,7 @@ class UserRequestBuilder {
     var name: String = "John Doe"
     var email: String = "email@email.com"
     var username = "jhon_doe"
-    var password = "strongpassword"
+    var password = "StrongP@ssw0rd"
 
     fun name(name: String) {
         this.name = name

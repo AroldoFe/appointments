@@ -9,7 +9,6 @@ import mock.dsl.createUserRequest
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import utils.assertions.ErrorResponseAsserts.assertErrorResponse
 import utils.extensions.postBadRequest
@@ -21,8 +20,8 @@ class UserRestControllerContractTest : AbstractContractTest() {
     lateinit var userServiceImpl: UserServiceImpl
 
     @ParameterizedTest
-    @ValueSource(strings = ["", "  "])
-    fun `should return bad request when name is blank`(invalidName: String) {
+    @MethodSource("mock.methodSource.TestMethodSource#invalidNames")
+    fun `should return bad request when name is invalid`(invalidName: String, expectedMessages: List<ErrorMessage>) {
         val request = createUserRequest {
             name(invalidName)
         }
@@ -30,36 +29,32 @@ class UserRestControllerContractTest : AbstractContractTest() {
         val result = this.client.postBadRequest<ErrorResponse>("/user", request)
 
         assertNotNull(result)
-        val expectedErrorMessageBlank = ErrorMessage(
-            error = "invalid_field",
-            parameterName = "name",
-            description = "Name must not be empty"
-        )
-
-        val expectedErrorMessageSize = ErrorMessage(
-            error = "invalid_field",
-            parameterName = "name",
-            description = "Name must be between 3 and 256 characters"
-        )
-        assertErrorResponse(result, expectedErrorMessageBlank, expectedErrorMessageSize)
+        assertErrorResponse(result, *expectedMessages.toTypedArray())
     }
 
     @ParameterizedTest
-    @MethodSource("mock.methodSource.TestMethodSource#invalidNames")
-    fun `should return bad request when name is invalid`(invalidName: String, expectedMessage: String) {
+    @MethodSource("mock.methodSource.TestMethodSource#invalidEmails")
+    fun `should return bad request when email is invalid`(invalidEmail: String, expectedMessages: List<ErrorMessage>) {
         val request = createUserRequest {
-            name(invalidName)
+            email(invalidEmail)
         }
 
         val result = this.client.postBadRequest<ErrorResponse>("/user", request)
 
         assertNotNull(result)
-        val expectedErrorMessage = ErrorMessage(
-            error = "invalid_field",
-            parameterName = "name",
-            description = expectedMessage
-        )
-        assertErrorResponse(result, expectedErrorMessage)
+        assertErrorResponse(result, *expectedMessages.toTypedArray())
     }
 
+    @ParameterizedTest
+    @MethodSource("mock.methodSource.TestMethodSource#invalidUsernames")
+    fun `should return bad request when username is invalid`(invalidUsername: String, expectedMessages: List<ErrorMessage>) {
+        val request = createUserRequest {
+            username(invalidUsername)
+        }
+
+        val result = this.client.postBadRequest<ErrorResponse>("/user", request)
+
+        assertNotNull(result)
+        assertErrorResponse(result, *expectedMessages.toTypedArray())
+    }
 }
