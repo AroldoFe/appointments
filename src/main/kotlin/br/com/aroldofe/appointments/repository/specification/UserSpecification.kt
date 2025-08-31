@@ -18,8 +18,8 @@ class UserSpecification(
     companion object {
         fun findByUsername(username: String) = UserSpecification(username = username)
         fun findByEmail(email: String) = UserSpecification(email = email)
-        fun findByUsernameOrEmail(username: String, email: String) = UserSpecification(username = username)
-                .or(UserSpecification(email = email))
+        fun findByUsernameOrEmail(username: String, email: String) = findByUsername(username)
+                .or(findByEmail(email))
         fun findByPubId(pubId: String) = UserSpecification(pubId = pubId)
 
     }

@@ -4,6 +4,7 @@ import br.com.aroldofe.appointments.domain.User
 import br.com.aroldofe.appointments.dto.bo.UserBO
 import br.com.aroldofe.appointments.dto.converter.toBO
 import br.com.aroldofe.appointments.dto.request.UserRequest
+import br.com.aroldofe.appointments.exception.definition.UsernameOrEmailAlreadyExists
 import br.com.aroldofe.appointments.repository.UserRepository
 import br.com.aroldofe.appointments.repository.specification.UserSpecification
 import br.com.aroldofe.appointments.service.NonAuthenticatedCreation
@@ -27,7 +28,7 @@ class UserServiceImpl(
 
         val existsSimilarUser = this.repository.exists(UserSpecification.findByUsernameOrEmail(user.username, user.email))
         if (existsSimilarUser) {
-            throw RuntimeException("bla bla bla")
+            throw UsernameOrEmailAlreadyExists()
         }
 
         return this.repository.save(user).toBO()
