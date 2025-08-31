@@ -53,6 +53,7 @@ class DefaultExceptionHandler(
 
     @ExceptionHandler(ApiException::class)
     fun handle(exception: ApiException): ResponseEntity<ErrorResponse> {
+        this.logger.error(exception.message, exception)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(exception.errorResponseList)
@@ -60,6 +61,7 @@ class DefaultExceptionHandler(
 
     @ExceptionHandler(EntityAlreadyExistsException::class)
     fun handle(exception: EntityAlreadyExistsException): ResponseEntity<ErrorResponse> {
+        this.logger.error(exception.message, exception)
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
             .body(exception.errorResponseList)
