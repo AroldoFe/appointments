@@ -14,6 +14,17 @@ fun WebTestClient.post(uri: String, body: Any, headers: Consumer<HttpHeaders>? =
     return request.exchange()
 }
 
+inline fun <reified T> WebTestClient.postCreated(
+    uri: String,
+    body: Any,
+    headers: Consumer<HttpHeaders>? = null
+): T? =
+    this.post(uri, body, headers)
+        .expectStatus().isCreated
+        .expectBody(T::class.java)
+        .returnResult()
+        .responseBody
+
 inline fun <reified T> WebTestClient.postBadRequest(
     uri: String,
     body: Any,

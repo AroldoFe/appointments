@@ -10,7 +10,7 @@ GRANT CONNECT ON DATABASE appointments TO appointment_usr;
 GRANT USAGE ON SCHEMA public TO appointment_usr;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO appointment_usr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO appointment_usr;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO appointment_usr;
+
 
 -- Criar sequence para identificador da tabela user
 CREATE SEQUENCE user_seq
@@ -194,3 +194,5 @@ CREATE TABLE appointment_procedure (
 -- Índices para performance
 CREATE INDEX idx_appointment_procedure_appointment_id ON appointment_procedure(appointment_id);
 CREATE INDEX idx_appointment_procedure_procedure_id ON appointment_procedure(procedure_id);
+
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO appointment_usr;

@@ -12,7 +12,7 @@ import jakarta.persistence.Table
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
