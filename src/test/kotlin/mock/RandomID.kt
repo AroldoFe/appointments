@@ -1,7 +1,10 @@
 package mock
 
+import br.com.aroldofe.appointments.utils.EntityType
+import br.com.aroldofe.appointments.utils.PublicIdUtils
+
 object RandomID {
-    fun stringSize(size: Int): String {
-        return "A".repeat(size)
+    fun pubId(prefix: EntityType): String {
+        return PublicIdUtils.generate(prefix)
     }
 }

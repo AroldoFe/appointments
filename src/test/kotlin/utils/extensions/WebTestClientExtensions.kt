@@ -14,6 +14,16 @@ fun WebTestClient.post(uri: String, body: Any, headers: Consumer<HttpHeaders>? =
     return request.exchange()
 }
 
+fun WebTestClient.put(uri: String, body: Any, headers: Consumer<HttpHeaders>? = null): WebTestClient.ResponseSpec {
+    var request = this.put()
+        .uri(uri)
+        .bodyValue(body)
+    if (headers != null) {
+        request = request.headers(headers)
+    }
+    return request.exchange()
+}
+
 inline fun <reified T> WebTestClient.postCreated(
     uri: String,
     body: Any,
@@ -35,3 +45,28 @@ inline fun <reified T> WebTestClient.postBadRequest(
         .expectBody(T::class.java)
         .returnResult()
         .responseBody
+
+inline fun <reified T> WebTestClient.putOk(
+    uri: String,
+    body: Any,
+    headers: Consumer<HttpHeaders>? = null
+): T? =
+    this.put(uri, body, headers)
+        .expectStatus().isOk
+        .expectBody(T::class.java)
+        .returnResult()
+        .responseBody
+
+
+inline fun <reified T> WebTestClient.putBadRequest(
+    uri: String,
+    body: Any,
+    headers: Consumer<HttpHeaders>? = null
+): T? =
+    this.put(uri, body, headers)
+        .expectStatus().isBadRequest
+        .expectBody(T::class.java)
+        .returnResult()
+        .responseBody
+
+

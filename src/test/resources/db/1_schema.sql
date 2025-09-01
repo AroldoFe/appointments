@@ -37,6 +37,30 @@ CREATE UNIQUE INDEX idx_uq_user_username ON "user"(username) where active = true
 CREATE UNIQUE INDEX idx_uq_user_pub_id ON "user"(pub_id);
 CREATE UNIQUE INDEX idx_uq_user_email ON "user"(email) where active = true;
 
+-- Criar sequence para identificador da tabela entity_history
+CREATE SEQUENCE entity_history_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Criar tabela user_history
+CREATE TABLE entity_history
+(
+    id                 BIGINT       NOT NULL PRIMARY KEY DEFAULT nextval('entity_history_seq'),
+    entity_id          BIGINT       NOT NULL,
+    entity_name        VARCHAR(100) NOT NULL,
+    user_id            BIGINT       NOT NULL,
+    creation_timestamp TIMESTAMP    NOT NULL             DEFAULT now(),
+    history            TEXT         NOT NULL,
+    CONSTRAINT fk_patient_history_user FOREIGN KEY (user_id) REFERENCES "user" (id)
+);
+
+-- Índices para performance
+CREATE INDEX idx_entity_history_entity_id ON patient_history(entity_id);
+CREATE INDEX idx_entity_history_user_id ON patient_history(user_id);
+
 -- Criar sequence para identificador da tabela insurance
 CREATE SEQUENCE insurance_seq
     START WITH 1
@@ -83,29 +107,6 @@ CREATE TABLE patient (
 
 -- Criar índice único para pub_id da tabela patient
 CREATE UNIQUE INDEX idx_uq_patient_pub_id ON patient(pub_id);
-
--- Criar sequence para identificador da tabela patient_history
-CREATE SEQUENCE patient_history_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
--- Criar tabela patient_history
-CREATE TABLE patient_history (
-    id BIGINT NOT NULL PRIMARY KEY DEFAULT nextval('patient_history_seq'),
-    patient_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    creation_timestamp TIMESTAMP NOT NULL DEFAULT now(),
-    history TEXT NOT NULL,
-    CONSTRAINT fk_patient_history_patient FOREIGN KEY (patient_id) REFERENCES patient(id),
-    CONSTRAINT fk_patient_history_user FOREIGN KEY (user_id) REFERENCES "user"(id)
-);
-
--- Índices para performance
-CREATE INDEX idx_patient_history_patient_id ON patient_history(patient_id);
-CREATE INDEX idx_patient_history_user_id ON patient_history(user_id);
 
 -- Criar sequence para identificador da tabela appointment
 CREATE SEQUENCE appointment_seq
