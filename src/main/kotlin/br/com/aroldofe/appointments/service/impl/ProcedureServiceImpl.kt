@@ -15,8 +15,8 @@ class ProcedureServiceImpl(
     private val repository: ProcedureRepository,
     private val userRepository: UserRepository
 ): AuthenticatedCreation<ProcedureRequest, ProcedureBO> {
-    override suspend fun create(data: ProcedureRequest, userPubId: String?): ProcedureBO {
-        val user = this.userRepository.findByPubId(userPubId!!)!!
+    override suspend fun create(data: ProcedureRequest, userPubId: String): ProcedureBO {
+        val user = this.userRepository.findByPubId(userPubId)!!
         val procedure = Procedure(name = data.name, creationUser = user)
 
         if (this.repository.findByPubId(procedure.pubId) != null) {

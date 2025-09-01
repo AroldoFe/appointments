@@ -16,10 +16,15 @@ class UserSpecification(
     val email: String? = null,
 ) : Specification<User> {
     companion object {
-        fun findByUsername(username: String) = UserSpecification(username = username)
-        fun findByEmail(email: String) = UserSpecification(email = email)
-        fun findByUsernameOrEmail(username: String, email: String) = findByUsername(username)
-                .or(findByEmail(email))
+        fun findByUsername(username: String, notPubId: String? = null) =
+            UserSpecification(username = username, notPubId = notPubId)
+
+        fun findByEmail(email: String, notPubId: String? = null) =
+            UserSpecification(email = email, notPubId = notPubId)
+
+        fun findByUsernameOrEmail(username: String, email: String, notPubId: String? = null) =
+            findByUsername(username, notPubId).or(findByEmail(email, notPubId))
+
         fun findByPubId(pubId: String) = UserSpecification(pubId = pubId)
 
     }

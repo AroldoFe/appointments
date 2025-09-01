@@ -21,7 +21,7 @@ class Appointment(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_seq")
     @SequenceGenerator(name = "appointment_seq", sequenceName = "appointment_seq", allocationSize = 1)
-    val id: Long = 0,
+    val id: Long? = null,
 
     @Column(name = "pub_id", nullable = false, length = 50)
     val pubId: String,

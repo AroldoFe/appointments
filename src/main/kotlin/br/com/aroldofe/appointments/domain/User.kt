@@ -23,21 +23,21 @@ class User(
     val pubId: String = PublicIdUtils.generate(EntityType.USER),
 
     @Column(name = "name", nullable = false, length = 256)
-    val name: String,
+    var name: String,
 
     @Column(name = "email", nullable = false, length = 256, unique = true)
-    val email: String,
+    var email: String,
 
     @Column(name = "username", nullable = false, length = 100, unique = true)
-    val username: String,
+    var username: String,
 
     @Column(name = "password", nullable = false, length = 256)
-    val password: String,
+    var password: String,
 
     @Column(name = "creation_timestamp", nullable = false)
     val creationTimestamp: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "active", nullable = false)
-    val active: Boolean = true
+    var active: Boolean = true
 )
 
