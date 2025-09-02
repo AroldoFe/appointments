@@ -4,6 +4,15 @@ import java.util.function.Consumer
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.reactive.server.WebTestClient
 
+fun WebTestClient.get(uri: String, headers: Consumer<HttpHeaders>? = null): WebTestClient.ResponseSpec {
+    var request = this.get()
+        .uri(uri)
+    if (headers != null) {
+        request = request.headers(headers)
+    }
+    return request.exchange()
+}
+
 fun WebTestClient.post(uri: String, body: Any, headers: Consumer<HttpHeaders>? = null): WebTestClient.ResponseSpec {
     var request = this.post()
         .uri(uri)
@@ -33,6 +42,16 @@ fun WebTestClient.patch(uri: String, body: Any?, headers: Consumer<HttpHeaders>?
     }
     return request.exchange()
 }
+
+inline fun <reified T> WebTestClient.getBadRequest(
+    uri: String,
+    headers: Consumer<HttpHeaders>? = null
+): T? =
+    this.get(uri, headers)
+        .expectStatus().isBadRequest
+        .expectBody(T::class.java)
+        .returnResult()
+        .responseBody
 
 inline fun <reified T> WebTestClient.postCreated(
     uri: String,
@@ -79,6 +98,17 @@ inline fun <reified T> WebTestClient.putBadRequest(
         .returnResult()
         .responseBody
 
+inline fun <reified T> WebTestClient.putNotFound(
+    uri: String,
+    body: Any,
+    headers: Consumer<HttpHeaders>? = null
+): T? =
+    this.put(uri, body, headers)
+        .expectStatus().isNotFound
+        .expectBody(T::class.java)
+        .returnResult()
+        .responseBody
+
 inline fun <reified T> WebTestClient.patchNoContent(
     uri: String,
     headers: Consumer<HttpHeaders>? = null
@@ -95,6 +125,16 @@ inline fun <reified T> WebTestClient.patchBadRequest(
 ): T? =
     this.patch(uri, null, headers)
         .expectStatus().isBadRequest
+        .expectBody(T::class.java)
+        .returnResult()
+        .responseBody
+
+inline fun <reified T> WebTestClient.patchNotFound(
+    uri: String,
+    headers: Consumer<HttpHeaders>? = null
+): T? =
+    this.patch(uri, null, headers)
+        .expectStatus().isNotFound
         .expectBody(T::class.java)
         .returnResult()
         .responseBody

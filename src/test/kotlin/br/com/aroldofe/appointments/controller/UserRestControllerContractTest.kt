@@ -15,6 +15,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import utils.assertions.ErrorResponseAsserts.assertErrorResponse
+import utils.extensions.getBadRequest
+import utils.extensions.patchBadRequest
 import utils.extensions.postBadRequest
 import utils.extensions.putBadRequest
 
@@ -162,5 +164,28 @@ class UserRestControllerContractTest : AbstractContractTest() {
         )
 
         assertErrorResponse(result, *expectedMessages.toTypedArray())
+    }
+
+    @Test
+    fun `should not get user with invalid id`() {
+        val result = this.client.getBadRequest<ErrorResponse>("/user/invalid-id")
+
+        val expectedErrorMessage = ErrorMessage(
+            error = "invalid_parameter",
+            description = "Invalid user ID format"
+        )
+
+        assertNotNull(result)
+        assertErrorResponse(result, expectedErrorMessage)
+    }
+
+    @Test
+    fun `should not inactivate user with invalid id`() {
+        val result = this.client.patchBadRequest<ErrorResponse>("/user/invalid-id/inactivate")
+        val expectedErrorMessage = ErrorMessage(
+            error = "invalid_parameter",
+            description = "Invalid user ID format"
+        )
+        assertErrorResponse(result, expectedErrorMessage)
     }
 }

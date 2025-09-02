@@ -5,15 +5,18 @@ import br.com.aroldofe.appointments.dto.response.UserResponse
 import br.com.aroldofe.appointments.enums.EntityName
 import br.com.aroldofe.appointments.exception.definition.ErrorResponse
 import br.com.aroldofe.appointments.exception.definition.ResourceNotActiveException
+import br.com.aroldofe.appointments.exception.definition.UserNotFoundException
 import br.com.aroldofe.appointments.exception.definition.UsernameOrEmailAlreadyExists
 import br.com.aroldofe.appointments.repository.EntityHistoryRepository
 import br.com.aroldofe.appointments.repository.UserRepository
+import br.com.aroldofe.appointments.utils.EntityType
 import br.com.aroldofe.appointments.utils.toSHA256
 import com.ninjasquad.springmockk.SpykBean
 import definition.AbstractIntegrationTest
 import io.mockk.coVerify
 import kotlin.test.assertFalse
 import kotlinx.coroutines.test.runTest
+import mock.RandomID
 import mock.dsl.createUserRequest
 import mock.dsl.updateUserRequest
 import org.junit.jupiter.api.Test
@@ -21,9 +24,11 @@ import utils.assertions.ErrorResponseAsserts.assertErrorResponse
 import utils.assertions.UserResponseAsserts.assertUserResponse
 import utils.extensions.patchBadRequest
 import utils.extensions.patchNoContent
+import utils.extensions.patchNotFound
 import utils.extensions.postBadRequest
 import utils.extensions.postCreated
 import utils.extensions.putBadRequest
+import utils.extensions.putNotFound
 import utils.extensions.putOk
 
 class UserRestControllerIntegratedTest : AbstractIntegrationTest() {
@@ -102,6 +107,13 @@ class UserRestControllerIntegratedTest : AbstractIntegrationTest() {
                 it.entityId == user.id && it.entityName == EntityName.USER
             })
         }
+    }
+
+    @Test
+    fun `should not edit non-existing user`() = runTest {
+        val updateUserRequest = updateUserRequest {}
+        val result = webTestClient.putNotFound<ErrorResponse>("/user/${RandomID.pubId(EntityType.USER)}", updateUserRequest)
+        assertErrorResponse(result, *UserNotFoundException().errorResponseList.errorMessages.toTypedArray())
     }
 
     @Test
@@ -242,6 +254,9 @@ class UserRestControllerIntegratedTest : AbstractIntegrationTest() {
         }
     }
 
-    // should not inactivate non-existing user
-    // should not inactivate user with invalid id format
+    @Test
+    fun `should not inactivate non-existing user`() = runTest {
+        val result = webTestClient.patchNotFound<ErrorResponse>("/user/${RandomID.pubId(EntityType.USER)}/inactivate")
+        assertErrorResponse(result, *UserNotFoundException().errorResponseList.errorMessages.toTypedArray())
+    }
 }
