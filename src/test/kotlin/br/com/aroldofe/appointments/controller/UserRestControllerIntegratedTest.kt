@@ -12,12 +12,15 @@ import br.com.aroldofe.appointments.utils.toSHA256
 import com.ninjasquad.springmockk.SpykBean
 import definition.AbstractIntegrationTest
 import io.mockk.coVerify
+import kotlin.test.assertFalse
 import kotlinx.coroutines.test.runTest
 import mock.dsl.createUserRequest
 import mock.dsl.updateUserRequest
 import org.junit.jupiter.api.Test
 import utils.assertions.ErrorResponseAsserts.assertErrorResponse
 import utils.assertions.UserResponseAsserts.assertUserResponse
+import utils.extensions.patchBadRequest
+import utils.extensions.patchNoContent
 import utils.extensions.postBadRequest
 import utils.extensions.postCreated
 import utils.extensions.putBadRequest
@@ -193,4 +196,52 @@ class UserRestControllerIntegratedTest : AbstractIntegrationTest() {
         }
     }
 
+    @Test
+    fun `should inactivate user successfully`() = runTest {
+        val user = userRepository.save(
+            User(
+                name = "John Doe",
+                email = "email@email.com",
+                username = "john_doe",
+                password = "StrongP@ssw0rd".toSHA256()
+            )
+        )
+
+        webTestClient.patchNoContent<Void>("/user/${user.pubId}/inactivate")
+        val userInactivated = userRepository.findByPubId(user.pubId)!!
+        assertFalse(userInactivated.active)
+        coVerify(exactly = 1) {
+            entityHistoryRepository.save(match {
+                it.entityId == user.id && it.entityName == EntityName.USER
+            })
+        }
+    }
+
+    @Test
+    fun `should not inactivate already inactive user`() = runTest {
+        val user = userRepository.save(
+            User(
+                name = "John Doe",
+                email = "email@email.com",
+                username = "john_doe",
+                password = "StrongP@ssw0rd".toSHA256(),
+                active = false
+            )
+        )
+
+        val result = webTestClient.patchBadRequest<ErrorResponse>("/user/${user.pubId}/inactivate")
+        val expectedError = ResourceNotActiveException().errorResponseList.errorMessages.first()
+        assertErrorResponse(result, expectedError)
+
+        val userInactivated = userRepository.findByPubId(user.pubId)!!
+        assertFalse(userInactivated.active)
+        coVerify(exactly = 0) {
+            entityHistoryRepository.save(match {
+                it.entityId == user.id && it.entityName == EntityName.USER
+            })
+        }
+    }
+
+    // should not inactivate non-existing user
+    // should not inactivate user with invalid id format
 }

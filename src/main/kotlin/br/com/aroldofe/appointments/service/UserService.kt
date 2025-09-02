@@ -6,4 +6,6 @@ import br.com.aroldofe.appointments.dto.request.UserUpdateRequest
 
 interface UserService :
     NonAuthenticatedCreation<UserRequest, UserBO>,
-    NonAuthenticatedUpdate<UserUpdateRequest, UserBO>
+    NonAuthenticatedUpdate<UserUpdateRequest, UserBO>,
+    NonAuthenticatedGet<UserBO>,
+    NonAuthenticatedInactivate<UserBO>

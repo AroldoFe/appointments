@@ -75,6 +75,26 @@ class UserServiceImpl(
         return this.repository.save(user).toBO()
     }
 
+    override suspend fun get(id: String): UserBO {
+        val user = this.repository.findByPubId(id)
+            ?: throw UserNotFoundException()
+
+        return user.toBO()
+    }
+
+    override suspend fun inactivate(id: String): UserBO {
+        val user = this.repository.findByPubId(id)
+            ?: throw UserNotFoundException()
+
+        if (!user.active) {
+            throw ResourceNotActiveException()
+        }
+
+        this.saveHistory(user)
+        user.active = false
+        return this.repository.save(user).toBO()
+    }
+
     private suspend fun saveHistory(user: User) {
         val snapshot = user.toJsonString()
         val history = EntityHistory(

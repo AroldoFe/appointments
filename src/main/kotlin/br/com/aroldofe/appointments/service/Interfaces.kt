@@ -15,3 +15,11 @@ interface AuthenticatedUpdate<C, R> {
 interface NonAuthenticatedUpdate<C, R> {
     suspend fun update(id: String, data: C): R
 }
+
+interface NonAuthenticatedGet<R> {
+    suspend fun get(id: String): R
+}
+
+interface NonAuthenticatedInactivate<R> {
+    suspend fun inactivate(id: String): R
+}
