@@ -73,11 +73,6 @@ class UserRestControllerIntegratedTest : AbstractIntegrationTest() {
         assertErrorResponse(result, UsernameOrEmailAlreadyExists().errorResponseList.errorMessages.first())
     }
 
-    // should edit user successfully
-    // should not edit inactive user
-    // should not edit username to one that already exists
-    // should not edit email to one that already exists
-
     @Test
     fun `should edit user successfully`() = runTest {
         val user = userRepository.save(
