@@ -58,8 +58,8 @@ CREATE TABLE entity_history
 );
 
 -- Índices para performance
-CREATE INDEX idx_entity_history_entity_id ON patient_history(entity_id);
-CREATE INDEX idx_entity_history_user_id ON patient_history(user_id);
+CREATE INDEX idx_entity_history_entity_id ON entity_history(entity_id);
+CREATE INDEX idx_entity_history_user_id ON entity_history(user_id);
 
 -- Criar sequence para identificador da tabela insurance
 CREATE SEQUENCE insurance_seq

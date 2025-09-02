@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
@@ -25,12 +26,12 @@ class EntityHistory(
     @Column
     val entityId: Long,
 
-    @Column(name = "date_created", nullable = false, length = 100)
+    @Column(name = "entity_name", nullable = false, length = 100)
     @Enumerated(STRING)
     val entityName: EntityName,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     val createdBy: User,
 
     @Column(name = "creation_timestamp", nullable = false)

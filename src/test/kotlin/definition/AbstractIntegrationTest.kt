@@ -36,6 +36,7 @@ abstract class AbstractIntegrationTest {
 
     fun clearAllTables() {
         val tables = listOf(
+            "entity_history",
             "appointment",
             "procedure",
             "insurance",
