@@ -22,7 +22,7 @@ fun updateUserRequest(init: UserUpdateRequestBuilder.() -> Unit): UserUpdateRequ
 class UserRequestBuilder {
     private var name: String = "John Doe"
     private var email: String = "email@email.com"
-    private var username = "jhon_doe"
+    private var username = "john_doe"
     private var password = "StrongP@ssw0rd"
 
     fun name(name: String) {
